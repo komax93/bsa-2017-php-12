@@ -93,12 +93,6 @@ class CarsController extends Controller
         $carRequest = new SaveCarRequest($carRequest->toArray(), $user);
         $this->carManager->saveCar($carRequest);
 
-        $usersList = $this->userManager->findAll();
-        foreach ($usersList as $userItem) {
-            $job = (new SendNotificationEmail($userItem))->onQueue('notification');
-            $this->dispatch($job);
-        }
-
         return redirect()->route('cars.index');
     }
 
