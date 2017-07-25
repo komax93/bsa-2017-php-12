@@ -20,3 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('cars', 'Api\CarsController@index');
 Route::get('cars/{id}', 'Api\CarsController@show')->where('id', '[0-9]+');
 Route::resource('admin/cars', 'Api\AdminController', ['except' => ['create', 'edit']]);
+
+Route::post('cars/rent/', "BookingController@rent");
+Route::post('cars/return/', "BookingController@return");

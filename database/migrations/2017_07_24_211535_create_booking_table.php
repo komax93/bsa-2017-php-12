@@ -24,8 +24,8 @@ class CreateBookingTable extends Migration
             $table->float('price')->default(0.0);
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
-            $table->foreign('car_id')->references('id')->on('cars');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('SET NULL');
+            $table->foreign('car_id')->references('id')->on('cars')->onDelete('SET NULL');
         });
     }
 
