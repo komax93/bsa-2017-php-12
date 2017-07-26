@@ -2,8 +2,13 @@
 
 namespace App\Services;
 
-use DateTime;
+use App\Entity\Car;
+use App\Entity\User;
 use App\Manager\BookingManager;
+use App\Exceptions\UserHasCarException;
+use App\Exceptions\BookedCarException;
+use App\Exceptions\UserNotFoundException;
+use App\Exceptions\CarNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,16 +39,27 @@ class RentalService
      * Rent a car
      * This method rent car by current user
      */
-    public function rentCar(Request $request)
+    public function rentCar(User $user, Car $car, string $rented_from)
     {
-        $data = [
-            'car_id' => $request->car_id,
-            'user_id' => Auth::user()->id,
-            'price' => self::price,
-            'rented_from' => $request->rented_from,
-            'rented_at' => new DateTime
-        ];
+        if(is_null($user)) {
+            throw new UserNotFoundException("{$user} not found!");
+        }
 
-        return $this->bookingManager->saveBooking($data);
+        if(is_null($car)) {
+            throw new CarNotFoundException("{$car} not found!");
+        }
+
+        if($this->bookingManager->isUserHasCar($user)) {
+            throw new UserHasCarException("{$user} rented a car now!");
+        }
+
+        if($this->bookingManager->isBooked($car)) {
+            throw new BookedCarException("{$car} is rented now");
+        }
+
+
+
+
+        //return $this->bookingManager->saveBooking($data);
     }
 }
