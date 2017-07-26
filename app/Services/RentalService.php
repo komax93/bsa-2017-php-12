@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Entity\User;
-use App\Entity\Car;
-use App\Entity\Booking;
-use Carbon\Carbon;
+use DateTime;
+use App\Manager\BookingManager;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RentalService
 {
@@ -16,38 +16,34 @@ class RentalService
     const PRICE = 50;
 
     /**
-     * @var User
+     * @var BookingManager
      */
-    private $user;
-
-    /**
-     * @var Car
-     */
-    private $car;
+    protected $bookingManager;
 
     /**
      * RentalService constructor.
      *
-     * @param User $user
-     * @param Car $car
+     * @param BookingManager $bookingManager
      */
-    public function __construct(User $user, Car $car)
+    public function __construct(BookingManager $bookingManager)
     {
-        $this->user = $user;
-        $this->car = $car;
+        $this->bookingManager = $bookingManager;
     }
 
     /**
      * Rent a car
      * This method rent car by current user
      */
-    public function rentCar()
+    public function rentCar(Request $request)
     {
-        $booking = new Booking();
-        $booking->user_id = $this->user->id;
-        $booking->car_id = $this->car->id;
-        $booking->rented_from = Carbon::now();
-        $booking->price = self::PRICE;
-        $booking->save();
+        $data = [
+            'car_id' => $request->car_id,
+            'user_id' => Auth::user()->id,
+            'price' => self::price,
+            'rented_from' => $request->rented_from,
+            'rented_at' => new DateTime
+        ];
+
+        return $this->bookingManager->saveBooking($data);
     }
 }

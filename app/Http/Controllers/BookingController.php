@@ -29,11 +29,6 @@ class BookingController extends Controller
 
     public function rent(Request $request)
     {
-        $user = $this->userManager->findById($request->user_id);
-        $car = $this->carManager->findById($request->car_id);
-
-        if(is_null($user) || is_null($car)) {
-            return response()->json(['error' => 'data not found'], 404);
-        }
+        $this->rentalService->rentCar($request);
     }
 }
