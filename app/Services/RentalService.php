@@ -9,8 +9,8 @@ use App\Exceptions\UserHasCarException;
 use App\Exceptions\BookedCarException;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\CarNotFoundException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Request\SaveBookingRequest;
+use DateTime;
 
 class RentalService
 {
@@ -39,27 +39,24 @@ class RentalService
      * Rent a car
      * This method rent car by current user
      */
-    public function rentCar(User $user, Car $car, string $rented_from)
+    public function rentCar(SaveBookingRequest $request)
     {
-        if(is_null($user)) {
-            throw new UserNotFoundException("{$user} not found!");
+        /*if(is_null($request->getUser())) {
+            throw new UserNotFoundException("{$request->getUser()->first_name} not found!");
         }
 
-        if(is_null($car)) {
-            throw new CarNotFoundException("{$car} not found!");
+        if(is_null($request->getCar())) {
+            throw new CarNotFoundException("{$request->getCar()->model} not found!");
         }
 
-        if($this->bookingManager->isUserHasCar($user)) {
-            throw new UserHasCarException("{$user} rented a car now!");
+        if($this->bookingManager->isUserHasCar($request->getUser())) {
+            throw new UserHasCarException("{$request->getUser()->first_name} rented a car now!");
         }
 
-        if($this->bookingManager->isBooked($car)) {
-            throw new BookedCarException("{$car} is rented now");
-        }
+        if($this->bookingManager->isBooked($request->getCar())) {
+            throw new BookedCarException("{$request->getCar()->model} is rented now");
+        }*/
 
-
-
-
-        //return $this->bookingManager->saveBooking($data);
+        return $this->bookingManager->saveBooking($request);
     }
 }

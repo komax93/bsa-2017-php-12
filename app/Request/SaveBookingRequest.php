@@ -22,10 +22,9 @@ class SaveBookingRequest extends AbstractRequest implements SaveBookingRequestCo
      * @param User|null $user
      * @param Car|null $car
      */
-    public function __construct(array $options, Booking $booking, User $user = null, Car $car = null)
+    public function __construct(array $options, User $user = null, Car $car = null)
     {
         parent::__construct(array_merge([
-            'booking' => $booking,
             'car' => $car,
             'user' => $user
         ], $options));

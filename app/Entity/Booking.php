@@ -16,7 +16,7 @@ class Booking extends Model
     /**
      * @var bool
      */
-    protected $timestamps = false;
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

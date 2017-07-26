@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Manager\CarManager;
 use App\Manager\UserManager;
+use App\Request\SaveBookingRequest;
 use App\Services\RentalService;
 use App\Services\ReturnService;
 use Illuminate\Http\Request;
@@ -29,6 +30,12 @@ class BookingController extends Controller
 
     public function rent(Request $request)
     {
+        $data = $request->toArray();
+        $user = $this->userManager->findById(1);
+        $car = $this->carManager->findById(1);
+
+        $request = new SaveBookingRequest($data, $user, $car);
+
         $this->rentalService->rentCar($request);
     }
 }
