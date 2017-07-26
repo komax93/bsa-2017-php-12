@@ -5,7 +5,7 @@ namespace App\Manager\Contract;
 use App\Entity\Booking;
 use App\Entity\Car;
 use App\Entity\User;
-use Illuminate\Http\Request;
+use App\Request\SaveBookingRequest;
 use Illuminate\Support\Collection;
 
 interface BookingManager
@@ -53,10 +53,10 @@ interface BookingManager
     /**
      * Create or Update Booking
      *
-     * @param Request $request
+     * @param SaveBookingRequest $request
      * @return Booking
      */
-    public function saveBooking(Request $request): Booking;
+    public function saveBooking(SaveBookingRequest $request): Booking;
 
     /**
      * Delete booking by id

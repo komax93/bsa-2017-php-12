@@ -6,7 +6,7 @@ use App\Entity\Booking;
 use App\Entity\Car;
 use App\Entity\User;
 use App\Manager\Contract\BookingManager as BookingManagerContract;
-use Illuminate\Http\Request;
+use App\Request\SaveBookingRequest;
 use Illuminate\Support\Collection;
 
 class BookingManager implements BookingManagerContract
@@ -78,19 +78,19 @@ class BookingManager implements BookingManagerContract
     /**
      * Create or Update Booking
      *
-     * @param Request $request
+     * @param SaveBookingRequest $request
      * @return Booking
      */
-    public function saveBooking(Request $request): Booking
+    public function saveBooking(SaveBookingRequest $request): Booking
     {
-        $booking = new Booking();
-        $booking->user_id = $request->user_id;
-        $booking->car_id = $request->car_id;
-        $booking->rented_from = $request->rented_at;
-        $booking->rented_at = $request->rented_at;
-        $booking->returned_to = $request->returned_to;
-        $booking->returned_at = $request->returned_at;
-        $booking->price = $request->price;
+        $booking = $request->getBooking();
+        $booking->user_id = $request->getUser()->id;
+        $booking->car_id = $request->getCar()->id;
+        $booking->rented_from = $request->getRentedFrom();
+        $booking->rented_at = $request->getRentedAt();
+        $booking->returned_to = $request->getReturnedTo();
+        $booking->returned_at = $request->getReturnedAt();
+        $booking->price = $request->getPrice();
         $booking->save();
 
         return $booking;
