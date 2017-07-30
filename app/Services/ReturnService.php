@@ -7,11 +7,12 @@ use App\Exceptions\CarNotFoundException;
 use App\Exceptions\UserHasCarException;
 use App\Request\SaveBookingRequest;
 use App\Manager\BookingManager;
+use App\Services\Contract\ReturnService as ReturnServiceContract;
 use App\Entity\User;
 use App\Entity\Car;
 use DateTime;
 
-class ReturnService
+class ReturnService implements ReturnServiceContract
 {
     /**
      * @var BookingManager

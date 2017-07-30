@@ -10,9 +10,10 @@ use App\Exceptions\BookedCarException;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\CarNotFoundException;
 use App\Request\SaveBookingRequest;
+use App\Services\Contract\RentalService as RentalServiceContract;
 use DateTime;
 
-class RentalService
+class RentalService implements RentalServiceContract
 {
     /**
      * Fixed const price
