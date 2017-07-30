@@ -41,10 +41,9 @@ class BookingManager implements BookingManagerContract
      */
     public function findUserCar(User $user, Car $car)
     {
-        return Booking::where([
-            ['car_id' => $car->id],
-            ['user_id' => $user->id]
-        ])->whereNull('returned_to')->whereNull('returned_at')->first();
+        return Booking::where('car_id', $car->id)
+                ->where('user_id', $user->id)
+                ->whereNull('returned_to')->whereNull('returned_at')->first();
     }
 
     /**
