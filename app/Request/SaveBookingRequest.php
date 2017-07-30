@@ -90,6 +90,6 @@ class SaveBookingRequest extends AbstractRequest implements SaveBookingRequestCo
      */
     public function getPrice()
     {
-        return $this->get('price');
+        return (float) ($this->get('price')) ?? 0.0;
     }
 }

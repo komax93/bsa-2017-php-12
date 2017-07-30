@@ -2,40 +2,65 @@
 
 namespace App\Services;
 
+use App\Exceptions\UserNotFoundException;
+use App\Exceptions\CarNotFoundException;
+use App\Exceptions\UserHasCarException;
+use App\Request\SaveBookingRequest;
+use App\Manager\BookingManager;
 use App\Entity\User;
 use App\Entity\Car;
-use App\Entity\Booking;
-use Carbon\Carbon;
+use DateTime;
 
 class ReturnService
 {
     /**
-     * @var User
+     * @var BookingManager
      */
-    private $user;
-
-    /**
-     * @var Car
-     */
-    private $car;
+    protected $bookingManager;
 
     /**
      * ReturnService constructor.
      *
-     * @param User $user
-     * @param Car $car
+     * @param BookingManager $bookingManager
      */
-    public function __construct(User $user, Car $car)
+    public function __construct(BookingManager $bookingManager)
     {
-        $this->user = $user;
-        $this->car = $car;
+        $this->bookingManager = $bookingManager;
     }
 
-    public function returnCar()
+    /**
+     * This method return a car
+     *
+     * @param User $user
+     * @param Car $car
+     * @param $returnedTo
+     * @return \App\Entity\Booking
+     * @throws CarNotFoundException
+     * @throws UserHasCarException
+     * @throws UserNotFoundException
+     */
+    public function returnCar(User $user, Car $car, $returnedTo)
     {
-        $rentedCar = Booking::where('user_id', '=', $this->user->id)->where('car_id', '=', $this->car->id);
-        $rentedCar->returned_to = '';
-        $rentedCar->returned_at = Carbon::now();
-        $rentedCar->save();
+        $booking = $this->bookingManager->findUserCar($user, $car);
+
+        if(is_null($user)) {
+            throw new UserNotFoundException("{$user->first_name} not found!");
+        }
+
+        if(is_null($car)) {
+            throw new CarNotFoundException("{$car->model} not found!");
+        }
+
+        if(is_null($this->bookingManager->findUserCar($user, $car))) {
+            throw new UserHasCarException("{$user->first_name} can't return this car, because car belongs another user");
+        }
+
+        $request = new SaveBookingRequest([
+            'booking' => $booking,
+            'returned_to' => $returnedTo,
+            'returned_at' => new DateTime,
+        ], $user, $car);
+
+        return $this->bookingManager->saveBooking($request);
     }
 }

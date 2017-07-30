@@ -21,8 +21,7 @@ class CreateBookingTable extends Migration
             $table->dateTime('rented_at')->nullable();
             $table->string('returned_to')->nullable();
             $table->dateTime('returned_at')->nullable();
-            $table->float('price')->default(0.0);
-            $table->timestamps();
+            $table->float('price')->default(0.0)->nullable();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('SET NULL');
             $table->foreign('car_id')->references('id')->on('cars')->onDelete('SET NULL');

@@ -55,7 +55,7 @@ class BookingController extends Controller
     }
 
     /**
-     * This method rent a car
+     * This action rent a car
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -88,12 +88,35 @@ class BookingController extends Controller
     }
 
     /**
-     * This method return a car
+     * This action return a car
      *
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function return(Request $request)
     {
+        $requestData = $request->only([
+            'user',
+            'car',
+            'returned_to'
+        ]);
 
+        $user = $this->userManager->findById($requestData['user']);
+        $car = $this->carManager->findById($requestData['car']);
+
+        if(is_null($user)) {
+            return response()->json(['error' => 'user not found']);
+        }
+
+        if(is_null($car)) {
+            return response()->json(['error' => 'car not found']);
+        }
+
+        try {
+            $returned = $this->returnService->returnCar($user, $car, $requestData['returned_to']);
+            return response()->json([$returned]);
+        } catch (UserNotFoundException | CarNotFoundException | UserHasCarException $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }
