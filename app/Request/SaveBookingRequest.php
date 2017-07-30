@@ -18,7 +18,6 @@ class SaveBookingRequest extends AbstractRequest implements SaveBookingRequestCo
     /**
      * SaveBookingRequest constructor.
      * @param array $options
-     * @param Booking $booking
      * @param User|null $user
      * @param Car|null $car
      */

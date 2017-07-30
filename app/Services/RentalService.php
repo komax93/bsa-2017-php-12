@@ -36,26 +36,40 @@ class RentalService
     }
 
     /**
-     * Rent a car
-     * This method rent car by current user
+     * This method rent a car
+     *
+     * @param User $user
+     * @param Car $car
+     * @param $rentedFrom
+     * @return \App\Entity\Booking
+     * @throws BookedCarException
+     * @throws CarNotFoundException
+     * @throws UserHasCarException
+     * @throws UserNotFoundException
      */
-    public function rentCar(SaveBookingRequest $request)
+    public function rentCar(User $user, Car $car, $rentedFrom)
     {
-        /*if(is_null($request->getUser())) {
-            throw new UserNotFoundException("{$request->getUser()->first_name} not found!");
+        if(is_null($user)) {
+            throw new UserNotFoundException("{$user->first_name} not found!");
         }
 
-        if(is_null($request->getCar())) {
-            throw new CarNotFoundException("{$request->getCar()->model} not found!");
+        if(is_null($car)) {
+            throw new CarNotFoundException("{$car->model} not found!");
         }
 
-        if($this->bookingManager->isUserHasCar($request->getUser())) {
-            throw new UserHasCarException("{$request->getUser()->first_name} rented a car now!");
+        if($this->bookingManager->isUserHasCar($user)) {
+            throw new UserHasCarException("{$user->first_name} rented a car now!");
         }
 
-        if($this->bookingManager->isBooked($request->getCar())) {
-            throw new BookedCarException("{$request->getCar()->model} is rented now");
-        }*/
+        if($this->bookingManager->isBooked($car)) {
+            throw new BookedCarException("{$car->model} is rented now");
+        }
+
+        $request = new SaveBookingRequest([
+            'rented_from' => $rentedFrom,
+            'rented_at' => new DateTime,
+            'price' => self::PRICE
+        ], $user, $car);
 
         return $this->bookingManager->saveBooking($request);
     }
