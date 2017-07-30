@@ -6,15 +6,42 @@ use App\Manager\CarManager;
 use App\Manager\UserManager;
 use App\Services\RentalService;
 use App\Services\ReturnService;
+use App\Exceptions\UserHasCarException;
+use App\Exceptions\BookedCarException;
+use App\Exceptions\UserNotFoundException;
+use App\Exceptions\CarNotFoundException;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
+    /**
+     * @var CarManager
+     */
     private $carManager;
+
+    /**
+     * @var UserManager
+     */
     private $userManager;
+
+    /**
+     * @var RentalService
+     */
     private $rentalService;
+
+    /**
+     * @var ReturnService
+     */
     private $returnService;
 
+    /**
+     * BookingController constructor.
+     *
+     * @param CarManager $carManager
+     * @param UserManager $userManager
+     * @param RentalService $rentalService
+     * @param ReturnService $returnService
+     */
     public function __construct(
         CarManager $carManager,
         UserManager $userManager,
@@ -27,17 +54,46 @@ class BookingController extends Controller
         $this->returnService = $returnService;
     }
 
+    /**
+     * This method rent a car
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function rent(Request $request)
     {
         $requestData = $request->only([
             'user',
             'car',
-            'address'
+            'rented_from'
         ]);
 
         $user = $this->userManager->findById($requestData['user']);
         $car = $this->carManager->findById($requestData['car']);
 
-        $this->rentalService->rentCar($user, $car, $requestData['address']);
+        if(is_null($user)) {
+            return response()->json(['error' => 'user not found']);
+        }
+
+        if(is_null($car)) {
+            return response()->json(['error' => 'car not found']);
+        }
+
+        try {
+            $booked = $this->rentalService->rentCar($user, $car, $requestData['rented_from']);
+            return response()->json([$booked]);
+        } catch (UserNotFoundException | CarNotFoundException | UserHasCarException | BookedCarException $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * This method return a car
+     *
+     * @param Request $request
+     */
+    public function return(Request $request)
+    {
+
     }
 }
