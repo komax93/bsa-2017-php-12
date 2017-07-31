@@ -54,8 +54,8 @@ class ReturnServiceTest extends TestCase
      */
     public function testReturnCar()
     {
-        $user = $this->bookedCar->user;
-        $car = $this->bookedCar->car;
+        $user = $this->bookedCar->users;
+        $car = $this->bookedCar->cars;
         $returnTo = Factory::create()->address;
 
         $returnedCar = $this->returnCar($user, $car, $returnTo);
@@ -66,8 +66,8 @@ class ReturnServiceTest extends TestCase
             "id" => $this->bookedCar->id,
             "user_id" => $user->id,
             "car_id" => $car->id,
-            "rented_from" => $this->bookedCar->rented_from,
-            "price" => RentalService::PRICE,
+            "rented_from" => null,
+            "price" => 0.0,
             "returned_to" => $returnTo,
         ], $returnedCar->toArray());
     }
