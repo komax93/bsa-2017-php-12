@@ -44,15 +44,15 @@ class ReturnService implements ReturnServiceContract
     {
         $booking = $this->bookingManager->findUserCar($user, $car);
 
-        if(is_null($user)) {
+        if(!$user->exists()) {
             throw new UserNotFoundException("{$user->first_name} not found!");
         }
 
-        if(is_null($car)) {
+        if(!$car->exists()) {
             throw new CarNotFoundException("{$car->model} not found!");
         }
 
-        if(is_null($this->bookingManager->findUserCar($user, $car))) {
+        if(is_null($booking)) {
             throw new UserHasNotCarException("{$user->first_name} can't return this car, because car belongs another user");
         }
 
