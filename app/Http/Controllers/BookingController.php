@@ -82,7 +82,7 @@ class BookingController extends Controller
 
         try {
             $booked = $this->rentalService->rentCar($user, $car, $requestData['rented_from']);
-            return response()->json([$booked]);
+            return response()->json($booked->toArray());
         } catch (UserNotFoundException | CarNotFoundException | UserHasCarException | BookedCarException $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
@@ -115,7 +115,7 @@ class BookingController extends Controller
 
         try {
             $returned = $this->returnService->returnCar($user, $car, $requestData['returned_to']);
-            return response()->json([$returned]);
+            return response()->json($returned->toArray());
         } catch (UserNotFoundException | CarNotFoundException | UserHasNotCarException $e) {
             return response()->json(['error' => $e->getMessage()]);
         }

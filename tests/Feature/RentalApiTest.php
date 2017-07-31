@@ -45,6 +45,26 @@ class RentalApiTest extends TestCase
                 'car' => $car->id,
                 'rented_from' => $rentedFrom
             ])
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertJson([
+                'user_id' => $user->id,
+                'car_id' => $car->id,
+                'rented_from' => $rentedFrom,
+                'price' => RentalService::PRICE,
+                'returned_to' => null,
+                'returned_at' => null
+            ]);
+
+        $newUser = $this->createUser();
+        $this->actingAs($newUser)
+            ->json('POST', '/api/cars/rent/', [
+                'user' => $newUser->id,
+                'car' => $car->id,
+                'rented_from' => $rentedFrom
+            ])
+            ->assertStatus(200)
+            ->assertJson([
+                'error' => "{$car->model} is rented now"
+            ]);
     }
 }

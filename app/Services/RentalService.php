@@ -59,7 +59,7 @@ class RentalService implements RentalServiceContract
         }
 
         if($this->bookingManager->isUserHasCar($user)) {
-            throw new UserHasCarException("{$user->first_name} rented a car now!");
+            throw new UserHasCarException("{$user->first_name} rented  now!");
         }
 
         if($this->bookingManager->isBooked($car)) {
