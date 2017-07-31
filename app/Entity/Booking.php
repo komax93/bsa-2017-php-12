@@ -36,7 +36,7 @@ class Booking extends Model
     /**
      * Belongs to User
      */
-    public function user()
+    public function users()
     {
         $this->belongsTo(User::class);
     }
@@ -44,7 +44,7 @@ class Booking extends Model
     /**
      * Belongs to car
      */
-    public function car()
+    public function cars()
     {
         $this->belongsTo(Car::class);
     }
