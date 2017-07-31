@@ -50,11 +50,11 @@ class RentalService implements RentalServiceContract
      */
     public function rentCar(User $user, Car $car, $rentedFrom)
     {
-        if(is_null($user)) {
+        if(!$user->exists()) {
             throw new UserNotFoundException("{$user->first_name} not found!");
         }
 
-        if(is_null($car)) {
+        if(!$car->exists()) {
             throw new CarNotFoundException("{$car->model} not found!");
         }
 
