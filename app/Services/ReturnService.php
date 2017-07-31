@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\UserHasNotCarException;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\CarNotFoundException;
-use App\Exceptions\UserHasCarException;
 use App\Request\SaveBookingRequest;
 use App\Manager\BookingManager;
 use App\Services\Contract\ReturnService as ReturnServiceContract;
@@ -37,7 +37,7 @@ class ReturnService implements ReturnServiceContract
      * @param $returnedTo
      * @return \App\Entity\Booking
      * @throws CarNotFoundException
-     * @throws UserHasCarException
+     * @throws UserHasNotCarException
      * @throws UserNotFoundException
      */
     public function returnCar(User $user, Car $car, $returnedTo)
@@ -53,7 +53,7 @@ class ReturnService implements ReturnServiceContract
         }
 
         if(is_null($this->bookingManager->findUserCar($user, $car))) {
-            throw new UserHasCarException("{$user->first_name} can't return this car, because car belongs another user");
+            throw new UserHasNotCarException("{$user->first_name} can't return this car, because car belongs another user");
         }
 
         $request = new SaveBookingRequest([

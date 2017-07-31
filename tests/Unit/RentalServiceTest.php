@@ -34,7 +34,7 @@ class RentalServiceTest extends TestCase
     use BookingsHelper;
 
     /**
-     * set up RentalServiceTest
+     * Set up RentalServiceTest
      */
     public function setUp()
     {

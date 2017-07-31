@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\UserHasNotCarException;
 use App\Manager\CarManager;
 use App\Manager\UserManager;
 use App\Services\RentalService;
@@ -115,7 +116,7 @@ class BookingController extends Controller
         try {
             $returned = $this->returnService->returnCar($user, $car, $requestData['returned_to']);
             return response()->json([$returned]);
-        } catch (UserNotFoundException | CarNotFoundException | UserHasCarException $e) {
+        } catch (UserNotFoundException | CarNotFoundException | UserHasNotCarException $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
     }
